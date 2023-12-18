@@ -16,18 +16,24 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Visit and login at [https://railway.app/] to set up a postgres database.
-Create a new project and copy the `DATABASE_URL` at the project's 'Variables' tab.
+### Setup Postgres
 
-// screenshot
+Visit and login at [Railway](https://railway.app/) to set up a postgres database.
+Create a new project and copy the `DATABASE_URL` at the `Variables` tab.
 
-Paste the `DATABASE_URL` to the .env file
-`DATABASE_URL="DATABASE_URL_VALUE"`
+<img src="./src/assets/screenshot1.png"  alt="screenshot1" /> 
 
-Setup Prisma
+Paste the `DATABASE_URL` to the `.env` file. Example can be found on `.env.example`
+```
+DATABASE_URL="DATABASE_URL_VALUE"
+```
+
+### Setup Prisma
 
 Run:
 
 `npx prisma generate` to generate Prisma Client.
+
 `npx prisma migrate dev` to create migrations from your Prisma schema and apply them to the database.
+
 `npx prisma studio` to browse your data.
