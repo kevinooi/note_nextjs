@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-export function NoteForm({ title, onSubmit }) {
+export function NoteForm({ title, note = null, onSubmit }) {
   const router = useRouter();
   const initialFormState = {
-    title: "",
-    content: "",
+    title: note?.title ?? "",
+    content: note?.content ?? "",
     errors: {
       title: null,
       content: null,

@@ -2,11 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { NoteForm } from "../../../../components/notes/form";
+import { useQuery } from "@tanstack/react-query";
+import { getNote } from "../page";
 
 export default function EditNotePage({ params: { id } }) {
-  // TODO: getNoteById
-  const router = useRouter();
+  const { data } = useQuery({
+    queryKey: ["note"],
+    queryFn: () => getNote(id),
+  });
 
+  const router = useRouter();
   const editNote = async ({ title, content }) => {
     try {
       const res = await fetch(`/api/notes/${id}`, {
@@ -28,9 +33,12 @@ export default function EditNotePage({ params: { id } }) {
   };
 
   return (
-    <NoteForm
-      title="Edit Note"
-      onSubmit={editNote}
-    />
+    data?.note && (
+      <NoteForm
+        title="Edit Note"
+        note={data.note}
+        onSubmit={editNote}
+      />
+    )
   );
 }

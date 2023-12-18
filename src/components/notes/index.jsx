@@ -9,9 +9,8 @@ async function getNotes() {
 }
 
 const Notes = () => {
-  // TODO: react query
   const { data, isLoading, error } = useQuery({
-    queryKey: ["stream-hydrate-notes"],
+    queryKey: ["notes"],
     queryFn: () => getNotes(),
   });
 
