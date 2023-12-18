@@ -13,15 +13,15 @@ export function NoteForm({ title, onSubmit }) {
       content: null,
     },
   };
-  const [formState, setFormState] = useState(initialFormState);
-  const isFormEmpty = Object.keys(formState)
+  const [form, setForm] = useState(initialFormState);
+  const isFormEmpty = Object.keys(form)
     .filter((v) => v != "errors")
-    .every((v) => formState[v] == null || formState[v] == "");
+    .every((v) => form[v] == null || form[v] == "");
 
   const handleSubmit = async () => {
-    const errors = await onSubmit(formState);
+    const errors = await onSubmit(form);
     if (errors) {
-      setFormState((prevState) => ({
+      setForm((prevState) => ({
         ...prevState,
         errors,
       }));
@@ -36,41 +36,39 @@ export function NoteForm({ title, onSubmit }) {
   return (
     <div className="max-w-md mx-auto pt-20">
       <h3 className="text-2xl font-semibold mb-4">{title}</h3>
-      {/* TODO: Change error border red styling */}
       <input
         type="text"
         placeholder="Title"
-        value={formState.title}
+        value={form.title}
         onChange={(e) =>
-          setFormState((prevState) => ({
+          setForm((prevState) => ({
             ...prevState,
             title: e.target.value,
           }))
         }
         className={`w-full p-2 ${
-          formState.errors?.title != null ? "mb-2" : "mb-4"
+          form.errors?.title != null ? "mb-2 border-red-700 border-2" : "mb-4"
         } border rounded`}
       />
-      {formState.errors?.title != null && (
-        <div className=" text-red-700 mb-2">{formState.errors.title}</div>
+      {form.errors?.title != null && (
+        <div className=" text-red-700 mb-2">{form.errors.title}</div>
       )}
-      {/* TODO: Change error border red styling */}
       <textarea
         placeholder="Content"
-        value={formState.content}
+        value={form.content}
         onChange={(e) =>
-          setFormState((prevState) => ({
+          setForm((prevState) => ({
             ...prevState,
             content: e.target.value,
           }))
         }
         className={`w-full p-2 ${
-          formState.errors?.content != null ? "" : "mb-4"
+          form.errors?.content != null ? "border-red-700 border-2" : " mb-4"
         } border rounded`}
         rows="5"
       />
-      {formState.errors?.content != null && (
-        <div className="text-red-700 mb-2">{formState.errors.content}</div>
+      {form.errors?.content != null && (
+        <div className="text-red-700 mb-2">{form.errors.content}</div>
       )}
       <button
         onClick={handleCancel}
