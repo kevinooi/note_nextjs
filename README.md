@@ -1,34 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Notes App
+
+## Preview
+
+<img src="./src/assets/notes.png"  alt="notes" /> 
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) showcasing CRUD operations with Nextjs API, Postgres database and Prisma ORM.
 
 ## Getting Started
 
-First, run the development server:
+- Clone the project
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+git clone https://github.com/kevinooi/note_nextjs.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Go to the project directory:
 
-### Setup Postgres
+```
+cd note_nextjs
+```
+
+- Install dependencies
+
+```
+npm install
+```
+
+- Run the development server
+
+```
+npm run dev
+```
+
+## Setup Postgres
 
 Visit and login at [Railway](https://railway.app/) to set up a postgres database.
 Create a new project and copy the `DATABASE_URL` at the `Variables` tab.
 
 <img src="./src/assets/screenshot1.png"  alt="screenshot1" /> 
 
-Paste the `DATABASE_URL` to the `.env` file. Example can be found on `.env.example`
+Paste the `DATABASE_URL` to the `.env` file. Example can be found on `.env.example`.
 ```
 DATABASE_URL="DATABASE_URL_VALUE"
 ```
 
-### Setup Prisma
+## Setup Prisma
 
 Run:
 
