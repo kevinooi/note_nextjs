@@ -25,24 +25,22 @@ const Notes = () => {
           </h1>
         ) : (
           data.notes.map((note) => (
-            <div
-              className="relative"
+            <Link
+              href={`/notes/${note.id}`}
               key={note.id}
             >
-              <Link href={`/notes/${note.id}`}>
-                <div className="bg-gradient-to-br from-green-800 via-light-green-600 to-green-300 hover:from-green-600 p-4 w-[250px] h-[250px] rounded-lg cursor-pointer">
-                  <h2 className="text-xl font-semibold mb-2 line-clamp-2 flex justify-between">
-                    {note.title}
-                  </h2>
-                  <p
-                    className="text-lg line-clamp-5"
-                    dangerouslySetInnerHTML={{
-                      __html: note.content.replace(/\n/g, "<br />"),
-                    }}
-                  />
-                </div>
-              </Link>
-            </div>
+              <div className="bg-gradient-to-br from-green-800 via-light-green-600 to-green-300 hover:from-green-600 p-4 w-[250px] h-[250px] rounded-lg cursor-pointer">
+                <h2 className="text-xl font-semibold mb-2 line-clamp-2 flex justify-between">
+                  {note.title}
+                </h2>
+                <p
+                  className="text-lg line-clamp-5"
+                  dangerouslySetInnerHTML={{
+                    __html: note.content.replace(/\n/g, "<br />"),
+                  }}
+                />
+              </div>
+            </Link>
           ))
         ))}
     </div>
