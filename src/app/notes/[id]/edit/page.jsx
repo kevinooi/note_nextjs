@@ -2,43 +2,37 @@
 
 import { useRouter } from "next/navigation";
 import { NoteForm } from "../../../../components/notes/form";
-import { useQuery } from "@tanstack/react-query";
-import { getNote } from "../page";
+import { useEditNote, useGetNote } from "../../../../hooks/useNotes";
 
 export default function EditNotePage({ params: { id } }) {
-  const { data } = useQuery({
-    queryKey: ["note"],
-    queryFn: () => getNote(id),
-  });
-
   const router = useRouter();
-  const editNote = async ({ title, content }) => {
-    try {
-      const res = await fetch(`/api/notes/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content }),
-      });
-      const { errors } = await res.json();
-
-      if (!errors) {
-        router.push("/");
-      } else {
-        return errors;
-      }
-    } catch (err) {
-      console.log(err);
-      alert(err.message ?? "Something went wrong");
-    }
-  };
+  const { data, isLoading, error } = useGetNote(id);
+  const editNote = useEditNote(() => router.back());
+  const onSubmit = async (data) => editNote.mutate(data);
 
   return (
-    data?.note && (
-      <NoteForm
-        title="Edit Note"
-        note={data.note}
-        onSubmit={editNote}
-      />
-    )
+    <>
+      {isLoading && (
+        <h1 className="pt-20 w-full flex justify-center items-center">
+          Loading...
+        </h1>
+      )}
+
+      {error && (
+        <h1 className="pt-20 w-full flex justify-center items-center">
+          Oops! An error has occured!
+        </h1>
+      )}
+
+      {data?.note && (
+        <NoteForm
+          title="Edit Note"
+          note={data.note}
+          onSubmit={onSubmit}
+          errors={editNote.data?.errors}
+          disabled={editNote.isPending}
+        />
+      )}
+    </>
   );
 }

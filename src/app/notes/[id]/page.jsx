@@ -2,36 +2,23 @@
 
 import { mdiArrowLeft, mdiDelete, mdiPencil } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useDeleteNote, useGetNote } from "../../../hooks/useNotes";
 
-export async function getNote(id) {
-  const res = await fetch(`/api/notes/${id}`, {
-    next: { revalidate: 10 },
-  });
-  return await res.json();
-}
-
-const NoteDetails = ({ params: { id } }) => {
+const NoteDetails = () => {
   const router = useRouter();
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["note"],
-    queryFn: () => getNote(id),
-  });
+  const { id } = useParams();
+  const { data, isLoading, error } = useGetNote(id);
 
   const handleEdit = (note) => {
     router.push(`/notes/${note.id}/edit`);
   };
 
+  const deleteNote = useDeleteNote(() => router.push("/"));
   const handleDelete = async (id) => {
     const result = confirm(`Are you sure you want to delete this note?`);
     if (result) {
-      const res = await fetch(`/api/notes/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-      const { success } = await res.json();
-      if (success) router.push("/");
+      deleteNote.mutate(id);
     }
   };
 
@@ -47,16 +34,16 @@ const NoteDetails = ({ params: { id } }) => {
 
   return (
     <div className="max-w-3xl mx-auto mt-8">
-      {/* TODO: add loader */}
       {isLoading && (
         <h1 className="w-full flex justify-center items-center">Loading...</h1>
       )}
-      {/* TODO: add error ui */}
+
       {error && (
         <h1 className="w-full flex justify-center items-center">
           Oops! An error has occured!
         </h1>
       )}
+
       {data?.note && (
         <div className="p-8 rounded-lg bg-gradient-to-br from-green-800 via-light-green-600 to-green-300">
           <div className="flex items-center mb-4">

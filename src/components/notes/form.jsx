@@ -3,15 +3,11 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-export function NoteForm({ title, note = null, onSubmit }) {
+export function NoteForm({ title, note = null, onSubmit, errors, disabled }) {
   const router = useRouter();
   const initialFormState = {
     title: note?.title ?? "",
     content: note?.content ?? "",
-    errors: {
-      title: null,
-      content: null,
-    },
   };
   const [form, setForm] = useState(initialFormState);
   const isFormEmpty = Object.keys(form)
@@ -19,22 +15,20 @@ export function NoteForm({ title, note = null, onSubmit }) {
     .every((v) => form[v] == null || form[v] == "");
 
   const handleSubmit = async () => {
-    const errors = await onSubmit(form);
-    if (errors) {
-      setForm((prevState) => ({
-        ...prevState,
-        errors,
-      }));
-    } else {
-      router.push(`/`);
-    }
+    await onSubmit({
+      id: note?.id ?? undefined,
+      title: form.title,
+      content: form.content,
+    });
   };
+
   const handleCancel = () => {
     router.back();
   };
 
   return (
     <div className="max-w-md mx-auto pt-20">
+      <div>{disabled}</div>
       <h3 className="text-2xl font-semibold mb-4">{title}</h3>
       <input
         type="text"
@@ -47,11 +41,11 @@ export function NoteForm({ title, note = null, onSubmit }) {
           }))
         }
         className={`w-full p-2 ${
-          form.errors?.title != null ? "mb-2 border-red-700 border-2" : "mb-4"
+          errors?.title != null ? "mb-2 border-red-700 border-2" : "mb-4"
         } border rounded`}
       />
-      {form.errors?.title != null && (
-        <div className=" text-red-700 mb-2">{form.errors.title}</div>
+      {errors?.title != null && (
+        <div className=" text-red-700 mb-2">{errors.title}</div>
       )}
       <textarea
         placeholder="Content"
@@ -63,12 +57,12 @@ export function NoteForm({ title, note = null, onSubmit }) {
           }))
         }
         className={`w-full p-2 ${
-          form.errors?.content != null ? "border-red-700 border-2" : " mb-4"
+          errors?.content != null ? "border-red-700 border-2" : " mb-4"
         } border rounded`}
         rows="5"
       />
-      {form.errors?.content != null && (
-        <div className="text-red-700 mb-2">{form.errors.content}</div>
+      {errors?.content != null && (
+        <div className="text-red-700 mb-2">{errors.content}</div>
       )}
       <button
         onClick={handleCancel}
@@ -78,7 +72,7 @@ export function NoteForm({ title, note = null, onSubmit }) {
       </button>
       <button
         onClick={handleSubmit}
-        disabled={isFormEmpty} // TODO: check loading state
+        disabled={isFormEmpty || disabled}
         className="bg-green-600 hover:bg-green-700 active:bg-green-800 disabled:bg-green-300 text-white py-2 px-4 rounded"
       >
         {title}
